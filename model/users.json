@@ -1,0 +1,72 @@
+{
+    "john": {
+        "username": "john",
+        "password": "kaka1954H#",
+        "phone_number": "0123477777777",
+        "accounts": [
+            {
+                "account_type": "saving",
+                "balance": 73500.0,
+                "account_no": "BS43436173",
+                "transactions": [
+                    {
+                        "transaction_type": "Transfer_in",
+                        "amount": 50000.0,
+                        "date": "2024-11-15",
+                        "source_account": null,
+                        "target_account": null
+                    },
+                    {
+                        "transaction_type": "Deposit",
+                        "amount": 20000.0,
+                        "date": "2024-11-15",
+                        "source_account": null,
+                        "target_account": null
+                    }
+                ]
+            }
+        ]
+    },
+    "ladi": {
+        "username": "ladi",
+        "password": "kaka1954H#",
+        "phone_number": "0123466666666",
+        "accounts": [
+            {
+                "account_type": "current",
+                "balance": 48500.0,
+                "account_no": "BS14341371",
+                "transactions": [
+                    {
+                        "transaction_type": "Deposit",
+                        "amount": 100000.0,
+                        "date": "2024-11-15",
+                        "source_account": null,
+                        "target_account": null
+                    },
+                    {
+                        "transaction_type": "Withdrawal",
+                        "amount": 2000.0,
+                        "date": "2024-11-15",
+                        "source_account": null,
+                        "target_account": null
+                    },
+                    {
+                        "transaction_type": "Transfer_out",
+                        "amount": 50000.0,
+                        "date": "2024-11-15",
+                        "source_account": null,
+                        "target_account": null
+                    },
+                    {
+                        "transaction_type": "Deposit",
+                        "amount": 500.0,
+                        "date": "2024-11-15",
+                        "source_account": null,
+                        "target_account": null
+                    }
+                ]
+            }
+        ]
+    }
+}
