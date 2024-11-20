@@ -20,13 +20,6 @@ class CurrentAccount(Account):
         super().__init__(account_type, balance)
         self.overdraft_limit = 1000
 
-    def deposit(self, amount):
-        """ Adds the amount to the account balance,
-        but only if the balance is less than the
-        overdraft limit."""
-        if amount > 0.00:
-            super().deposit(amount)
-
     def withdraw(self, amount):
         """ Subtracts the amount from the account balance,
         but only if the balance is sufficient to cover
@@ -35,8 +28,8 @@ class CurrentAccount(Account):
         if self.get_balance >= amount:
             super().withdraw(amount)
         else:
-            if amount <= (self.overdraft_limit + self.balance):
-                self.balance -= amount
+            if amount <= (self.overdraft_limit + self.get_balance):
+                self.get_balance -= amount
                 current_datetime = datetime.now()
                 transaction = Transaction(
                                         "Withdrawal", amount,
@@ -45,5 +38,6 @@ class CurrentAccount(Account):
                 print(f"Withdrawal successful."
                       f" New balance: {self.get_balance} EUR")
             else:
-                print("Insufficient funds."
+                raise ValueError("Insufficient funds."
                       f" Available balance: {self.get_balance} EUR")
+            return self.get_balance

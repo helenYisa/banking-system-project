@@ -42,17 +42,12 @@ class SavingAccount(Account):
                                         current_date.strftime("%Y-%m-%d"))
             super().add_transaction(transaction)
         else:
-            print("Invalid deposit amount")
-
-    def withdraw(self, amount):
-        """
-        Subtracts the amount from the balance """
-
-        super().withdraw(amount)
+            raise ValueError("Invalid deposit amount")
+        return self.get_balance
 
     def calculate_interest(self, amount):
         """
-        Calculates the simple interest on a deposit.
+        Calculates the interest earned on a deposit.
 
         Args:
         amount (float): The amount of the deposit.
@@ -60,12 +55,7 @@ class SavingAccount(Account):
         Returns:
         float: The interest earned.
         """
-        # Simple interest formula: Interest = P * R * T / 100
-        principal = amount
-        rate_of_interest = self.interest_rate
-        time_period = 1  # Time period is 1 year
-        interest = (principal * rate_of_interest * time_period) / 100
-        return interest
+        if amount <= 0.00:
+            raise ValueError("Invalid deposit amount")
+        return amount * self.interest_rate / 100
 
-    def add_transaction(self, transaction):
-        return super().add_transaction(transaction)

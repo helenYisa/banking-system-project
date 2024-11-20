@@ -16,6 +16,8 @@ class Bank:
         user_data_file (str): Path to the JSON file used to store user data.
 
     Methods:
+        save_customer(): Saves the customers data to a json file
+        load_customer(): Loads the customers data from a json file
         menu(): Displays the main menu and handles user input for
         registering, logging in, or exiting.
         register_account(): Registers a new user account with a username
@@ -24,8 +26,6 @@ class Bank:
         and password.
         user_registration(): Gets the user's details from the console
         and validates the details
-        save_customer(): Saves the customers data to a json file
-        load_customer(): Loads the customers data from a json file
     """
     def __init__(self):
         """

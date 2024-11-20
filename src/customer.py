@@ -220,7 +220,8 @@ class Customer:
             print("Deposit successful."
                   f" New balance: {account.get_balance} EUR")
         else:
-            print("Account not found")
+            raise AttributeError("Account not found")
+        return account
 
     def perform_withdrawal(
                             self, amount: float,
@@ -238,7 +239,8 @@ class Customer:
                                      account_no, account.get_balance,
                                      account.transactions)
         else:
-            print("Account not found")
+            raise AttributeError("Account not found")
+        return account
 
     def perform_balance_check(self, account_type: str, account_no: str):
         """
@@ -254,7 +256,8 @@ class Customer:
             print(f"Account Number: {account_no}")
             print(f"Your account balance is: {account.get_balance} EUR")
         else:
-            print("Account not found.")
+            raise AttributeError("Account not found.")
+        return account
 
     def perform_generate_statement(self, account_type: str, account_no: str):
         """
@@ -268,7 +271,8 @@ class Customer:
             print("---------------------------")
             account.generate_statement()
         else:
-            print("Account not found.")
+            raise AttributeError("Account not found.")
+        return account
 
     def perform_transfer(
                             self, amount: float,

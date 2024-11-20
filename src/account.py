@@ -78,14 +78,15 @@ class Account():
 
         Args:
             amount (float): The amount of the deposit."""
-        if amount > 0:
+        if amount <= 0:
+            raise ValueError("Invalid deposit amount")
+        elif amount > 0:
             self.__balance += amount
             current_datetime = datetime.now()
             transaction = Transaction("Deposit", amount,
                                       current_datetime.strftime("%Y-%m-%d"))
             self.add_transaction(transaction)
-        else:
-            print("Invalid deposit amount")
+        return self.__balance
 
     def withdraw(self, amount):
         """
@@ -94,7 +95,12 @@ class Account():
 
         Args:
             amount (float): The amount of the withdrawal."""
-        if self.__balance >= amount:
+        if amount <= 0:
+            raise ValueError("Invalid withdraw amount")
+        elif amount > self.__balance:
+            raise ValueError("Insufficient funds."
+                  f" Available balance: {self.__balance} EUR")
+        elif self.__balance >= amount:
             self.__balance -= amount
             current_datetime = datetime.now()
             transaction = Transaction("Withdrawal", amount,
@@ -102,9 +108,7 @@ class Account():
             self.add_transaction(transaction)
             print(f"Withdrawal successful."
                   f" New balance: {self.__balance} EUR")
-        else:
-            print("Insufficient funds."
-                  f" Available balance: {self.__balance} EUR")
+        return self.__balance
 
     def generate_statement(self):
         """
