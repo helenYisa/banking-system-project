@@ -16,16 +16,16 @@ class Bank:
         user_data_file (str): Path to the JSON file used to store user data.
 
     Methods:
-        save_customer(): Saves the customers data to a json file
-        load_customer(): Loads the customers data from a json file
         menu(): Displays the main menu and handles user input for
         registering, logging in, or exiting.
         register_account(): Registers a new user account with a username
         and password.
         user_authentication(): Authenticates a user based on username
         and password.
-        user_registration(): Gets the user's details from the console
+        get_user_inputs(): Gets the user's inputs from the console
         and validates the details
+        save_customer(): Saves the customers data to a json file
+        load_customer(): Loads the customers data from a json file
     """
     def __init__(self):
         """
@@ -35,7 +35,7 @@ class Bank:
 
         # Path to the JSON file used to store user data
         # This is relative to the current working directory.
-        self.user_data_file = '/home/student/Documents/my-projects/banking-system-project/model/users.json'
+        self.user_data_file = '/home/student/Projects/project-i-helenYisa/model/users.json'
 
         # Load user data from JSON file if it exists, or create an empty file
         if not os.path.exists(self.user_data_file):
@@ -92,33 +92,17 @@ class Bank:
             choice = input("Enter your choice: ")
 
             if choice == "1":
-                login_details = self.user_registration()
-                if login_details is not None:
-                    account = Account(login_details.get('account_type', ""))
-                    self.register_customer(login_details.get("username", 0),
-                                           login_details.get("password", 0),
-                                           login_details.
-                                           get("phone_number", 0),
-                                           account)
-                while login_details is None:
+                registration_details = self.get_user_inputs()
+                self.register_user(registration_details)
+                while registration_details is None:
                     print("1. To retry registration")
                     print("2. To exit ")
                     exit_login = input("Enter: ")
                     if exit_login == "2":
                         break
                     else:
-                        login_details = self.user_registration()
-                        if login_details is not None:
-                            account = Account(
-                                                    login_details.
-                                                    get('account_type', ""))
-                            self.register_customer(login_details.get
-                                                   ("username", 0),
-                                                   login_details.get
-                                                   ("password", 0),
-                                                   login_details.get
-                                                   ("phone_number", 0),
-                                                   account)
+                        registration_details = self.get_user_inputs()
+                        self.register_user(registration_details)
 
             elif choice == "2":
                 username = input("Please enter your username: ")
@@ -133,7 +117,7 @@ class Bank:
             else:
                 print("Invalid choice. Please try again.")
 
-    def register_customer(
+    def save_user(
             self, username: str, password: str,
             phone_number=None, account=None
             ):
@@ -178,14 +162,16 @@ class Bank:
         return None
 
     @staticmethod
-    def user_registration():
+    def get_user_inputs():
         """
-        Handles the user login process by calling `authenticate_customer`
-        and storing the authenticated customer in the `current_user` attribute.
+        Validates the user registration process, ensuring that user inputs
+        conform to regexp.
 
         Args:
             username (str): The customer's username.
             password (str): The customer's password.
+            phone_number (str): The customer's phone number.
+            account_type (str): The customer's account type.
 
         Returns:
             dict: containing the customer's username and password
@@ -201,7 +187,7 @@ class Bank:
                                        r"(?=.*[~`!@#$%^&*()\-+={}[\]|;:\"<>,./?])"
                                        r".{8,}$", password))
         # Phone number validation
-        phone_valid = bool(re.match(r"^(\+49|0)\d{12,13}$", phone_number))
+        phone_valid = bool(re.match(r"^(\+|0)\d{12,}$", phone_number))
 
         # If all validations pass, return the details in a dictionary
         if password_valid and phone_valid and (account_type == "saving" or
@@ -227,3 +213,11 @@ class Bank:
             print("Invalid account type. Account type must be either"
                   " saving or current")
             return None
+
+    def register_user(self, registration_details: dict):
+        if registration_details is not None:
+            account = Account(registration_details.get('account_type', ""))
+            self.save_user(registration_details.get("username", 0),
+                           registration_details.get("password", 0),
+                           registration_details.get("phone_number", 0),
+                           account)

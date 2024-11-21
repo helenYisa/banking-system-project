@@ -81,7 +81,7 @@ class Customer:
         return customer
 
     @staticmethod
-    def load_data(file_path="/home/student/Documents/my-projects/banking-system-project/model/users.json"):
+    def load_data(file_path="/home/student/Projects/project-i-helenYisa/model/users.json"):
         """Load and return customer data from the JSON file."""
         with open(file_path, 'r') as file:
             return json.load(file)
@@ -89,7 +89,7 @@ class Customer:
     @staticmethod
     def save_data(
                     data: dict,
-                    file_path="/home/student/Documents/my-projects/banking-system-project/model/users.json"
+                    file_path="/home/student/Projects/project-i-helenYisa/model/users.json"
                     ):
         """Save the updated customer data to the JSON file."""
         with open(file_path, 'w') as file:
@@ -128,7 +128,6 @@ class Customer:
             choice = input("Enter your choice: ")
 
             if choice in ["1", "2", "3", "4", "5"]:
-                account_type = input("Account type (saving/current): ").lower()
                 account_no = input("Account number: ")
 
                 if choice in ["1", "2", "3"]:
@@ -143,15 +142,15 @@ class Customer:
 
                 # Perform the appropriate action
                 if choice == "1":
-                    self.perform_deposit(amount, account_type, account_no)
+                    self.perform_deposit(amount, account_no)
                 elif choice == "2":
-                    self.perform_withdrawal(amount, account_type, account_no)
+                    self.perform_withdrawal(amount, account_no)
                 elif choice == "3":
-                    self.perform_transfer(amount, account_type, account_no)
+                    self.perform_transfer(amount, account_no)
                 elif choice == "4":
-                    self.perform_balance_check(account_type, account_no)
+                    self.perform_balance_check(account_no)
                 elif choice == "5":
-                    self.perform_generate_statement(account_type, account_no)
+                    self.perform_generate_statement(account_no)
 
             elif choice == "6":
                 print("Logging out...")
@@ -160,7 +159,7 @@ class Customer:
             else:
                 print("Invalid choice. Please try again.")
 
-    def update_account_data(self, account_type: str, account_no: str,
+    def update_account_data(self, account_no: str,
                             new_balance: int, transactions: Transaction):
         """
         Updates the balance in the JSON data for the specified account.
@@ -169,15 +168,14 @@ class Customer:
         customer = customers_data.get(self.username)
 
         for account_data in customer["accounts"]:
-            if (account_data["account_no"] == account_no and
-                    account_data["account_type"] == account_type):
+            if (account_data["account_no"] == account_no):
                 account_data["balance"] = new_balance
                 account_data["transactions"] = [transaction.to_dict() for
                                                 transaction in transactions]
                 self.save_data(customers_data)
                 return
 
-    def get_account_data(self, account_type: str, account_no: str):
+    def get_account_data(self, account_no: str):
         """
         Retrieves the specified account object for the current customer.
         """
@@ -186,8 +184,8 @@ class Customer:
         toReturn = None
 
         for account_data in customer["accounts"]:
-            if (account_data["account_no"] == account_no and
-                    account_data["account_type"] == account_type):
+            if (account_data["account_no"] == account_no):
+                account_type = account_data["account_type"]
                 if account_type == "saving":
                     account = SavingAccount(account_no,
                                             account_data["balance"])
@@ -202,86 +200,77 @@ class Customer:
                             Transaction.from_dict(transaction))
         return toReturn
 
-    def perform_deposit(
-                        self, amount: float,
-                        account_type: str, account_no: str
-                        ):
+    def perform_deposit(self, amount: float,
+                        account_no: str):
         """
         Deposits an amount to the account.
         """
 
-        account = self.get_account_data(account_type, account_no)
+        account = self.get_account_data(account_no)
 
         if account:
             account.deposit(amount)
-            self.update_account_data(account_type,
+            self.update_account_data(
                                      account_no, account.get_balance,
                                      account.transactions)
             print("Deposit successful."
                   f" New balance: {account.get_balance} EUR")
         else:
-            raise AttributeError("Account not found")
-        return account
+            print("Account not found")
 
     def perform_withdrawal(
                             self, amount: float,
-                            account_type: str, account_no: str
+                            account_no: str
                             ):
         """
         Withdraws an amount from the account.
         """
 
-        account = self.get_account_data(account_type, account_no)
+        account = self.get_account_data(account_no)
 
         if account:
             account.withdraw(amount)
-            self.update_account_data(account_type,
-                                     account_no, account.get_balance,
+            self.update_account_data(account_no, account.get_balance,
                                      account.transactions)
         else:
-            raise AttributeError("Account not found")
-        return account
+            print("Account not found")
 
-    def perform_balance_check(self, account_type: str, account_no: str):
+    def perform_balance_check(self, account_no: str):
         """
         Prints the balance of the customer's account.
         """
 
-        account = self.get_account_data(account_type, account_no)
+        account = self.get_account_data(account_no)
 
         if account:
             print(f"Account Holder: {self.username}")
-            print("Balance Check:")
-            print(f"Account Type: {account_type}")
             print(f"Account Number: {account_no}")
             print(f"Your account balance is: {account.get_balance} EUR")
         else:
-            raise AttributeError("Account not found.")
-        return account
+            print("Account not found.")
 
-    def perform_generate_statement(self, account_type: str, account_no: str):
+    def perform_generate_statement(self, account_no: str):
         """
         Prints account statement.
         """
 
-        account = self.get_account_data(account_type, account_no)
+        account = self.get_account_data(account_no)
 
         if account:
             print(f"\nAccount Number: {account_no}")
             print("---------------------------")
             account.generate_statement()
         else:
-            raise AttributeError("Account not found.")
-        return account
+            print("Account not found.")
 
     def perform_transfer(
                             self, amount: float,
-                            account_type: str, account_no: str
+                            account_no: str
                             ):
         """
         Transfers an amount from the user's account to a target account.
         """
-        source_account = self.get_account_data(account_type, account_no)
+        source_account = self.get_account_data(account_no)
         target_name = input("Target account username: ")
         target_account_no = input("Target account number: ")
         customers_data = self.load_data()
