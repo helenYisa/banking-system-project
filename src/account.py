@@ -37,7 +37,7 @@ class Account():
         Returns:
             float: The current balance of the account.
         """
-        return self.__balance
+        return f"{self.__balance:.2f}"
 
     @get_balance.setter
     def get_balance(self, value):
@@ -50,7 +50,7 @@ class Account():
         """
         return {
             "account_type": self.account_type,
-            "balance": self.__balance,
+            "balance": f"{self.__balance:.2f}",
             "account_no": self.account_no,
             "transactions": [
                                 transaction.to_dict() for transaction in
@@ -95,7 +95,7 @@ class Account():
 
         Args:
             amount (float): The amount of the withdrawal."""
-        if amount <= 0:
+        if amount <= 0.00:
             raise ValueError("Invalid withdraw amount")
         elif amount > self.__balance:
             raise ValueError("Insufficient funds."
